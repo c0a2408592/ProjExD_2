@@ -29,24 +29,37 @@ def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
     return yoko, tate
 
 
-def gameover(screen:pg.Surface) -> None:    
+def gameover(screen:pg.Surface) -> None:  
+    # 1. 黒い矩形を描画するための空のSurfaceを作り，黒い矩形を描画する  
     hk_img = pg.Surface((WIDTH,HEIGHT))
     pg.draw.rect(hk_img,(0,0,0),(0,0,WIDTH,HEIGHT))
-
+    # 2. 1のSurfaceの透明度を設定する
     hk_img.set_alpha(180) 
-
+    # 3. 白文字でGame Overと書かれたフォントSurfaceを作り，1のSurfaceにblitする
     fonto = pg.font.Font(None,65)
     txt = fonto.render("Game Over", True, (255,255,255))
     hk_img.blit(txt, [447,320])
-
+    # 4. こうかとん画像をロードし，こうかとんSurfaceを作り，1のSurfaceにblitする
     ko_img = pg.image.load("fig/8.png")
     hk_img.blit(ko_img, [390,300])
     hk_img.blit(ko_img, [700,300])
-
+    # 5. 1のSurfaceをscreen Surfaceにblitする
     screen.blit(hk_img, [0,0])
-
+    # 6. pg.display.update()したら，time.sleep(5)する
     pg.display.update()
     time.sleep(5)
+    
+
+
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)] # 加速度のリスト
+    for r in range(1, 11): # 爆弾Surfaceのリスト
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_img.set_colorkey((0,0,0))
+        bb_imgs.append(bb_img)
+    return bb_imgs, bb_accs
 
 
 def main():
@@ -65,6 +78,7 @@ def main():
     vx, vy = +5, +5 # 爆弾の横速度、縦速度
     clock = pg.time.Clock()
     tmr = 0
+    bb_imgs,bb_accs = init_bb_imgs()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -74,7 +88,6 @@ def main():
             # print("ゲームオーバー")
             gameover(screen)
             return
-        
         
         screen.blit(bg_img, [0, 0]) 
 
@@ -96,6 +109,13 @@ def main():
         if check_bound(kk_rct) != (True, True): # 画面外なら
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1]) # 移動を無かったことにする
         screen.blit(kk_img, kk_rct)
+        avx = vx*bb_accs[min(tmr//500, 9)]
+        avy = vy*bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
+        bb_rct.width = bb_img.get_rect().width
+        bb_rct.height = bb_img.get_rect().height
+        bb_rct.move_ip(avx,avy)
+
         yoko, tate = check_bound(bb_rct)
         if not yoko: # 横方向のはみ出ていたら
             vx *= -1
