@@ -30,6 +30,11 @@ def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
 
 
 def gameover(screen:pg.Surface) -> None:  
+    """
+    ゲームオーバーの画面表示
+    引数：screen Surfacce
+    戻り値：なし
+    """
     # 1. 黒い矩形を描画するための空のSurfaceを作り，黒い矩形を描画する  
     hk_img = pg.Surface((WIDTH,HEIGHT))
     pg.draw.rect(hk_img,(0,0,0),(0,0,WIDTH,HEIGHT))
@@ -51,8 +56,13 @@ def gameover(screen:pg.Surface) -> None:
     
 
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """
+    爆弾のサイズと加速度のリストの初期化
+    引数：なし
+    戻り値：爆弾Surfaceのリストと加速度のリストのタプル
+    """
     bb_imgs = []
-    bb_accs = [a for a in range(1, 11)] # 加速度のリスト
+    bb_accs = [a for a in range(1, 11)] # と
     for r in range(1, 11): # 爆弾Surfaceのリスト
         bb_img = pg.Surface((20*r, 20*r))
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
@@ -62,6 +72,11 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
 
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """
+    移動方向に応じたこうかとん画像を切り替える
+    引数：なし
+    戻り値：こうかとんの移動方向に応じた画像surfaceの辞書
+    """
     kk_dict = {
         (0, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),      # 動かない場合
         (+5, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), -90, 0.9),   # 右
