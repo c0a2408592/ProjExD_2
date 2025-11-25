@@ -50,7 +50,6 @@ def gameover(screen:pg.Surface) -> None:
     time.sleep(5)
     
 
-
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     bb_imgs = []
     bb_accs = [a for a in range(1, 11)] # 加速度のリスト
@@ -63,7 +62,6 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
 
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
-    kk_imgs {}
     kk_dict = {
         (0, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),      # 動かない場合
         (+5, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), -90, 0.9),   # 右
@@ -75,6 +73,7 @@ def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
         (0, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 180, 0.9),   # 下
         (+5, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), -135, 0.9)  # 右下
     }
+    return kk_dict
 
 
 def main():
@@ -94,7 +93,8 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     bb_imgs,bb_accs = init_bb_imgs()
-    
+    kk_img_dict = get_kk_imgs()
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -137,6 +137,8 @@ def main():
             vx *= -1
         if not tate: # 縦方向のはみ出ていたら
             vy *= -1
+        sum_mv_tuple = tuple(sum_mv)
+        kk_img = kk_img_dict.get(sum_mv_tuple,kk_img_dict[(0,0)])
         bb_rct.move_ip(vx, vy)
         screen.blit(bb_img, bb_rct) 
         pg.display.update()
