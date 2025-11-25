@@ -62,6 +62,21 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     return bb_imgs, bb_accs
 
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    kk_imgs {}
+    kk_dict = {
+        (0, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),      # 動かない場合
+        (+5, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), -90, 0.9),   # 右
+        (+5, -5): pg.transform.rotozoom(pg.image.load("fig/3.png"), -45, 0.9),  # 右上
+        (0, -5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),     # 上
+        (-5, -5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 0.9),   # 左上
+        (-5, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 0.9),    # 左
+        (-5, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 135, 0.9),  # 左下
+        (0, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 180, 0.9),   # 下
+        (+5, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), -135, 0.9)  # 右下
+    }
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -134,3 +149,5 @@ if __name__ == "__main__":
     pg.quit()
     sys.exit()
 
+
+# 途中です
